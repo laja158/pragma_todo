@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonList, IonCheckbox, IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
 import { TaskService } from 'src/app/core/services/task.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { TaskService } from 'src/app/core/services/task.service';
   templateUrl: './tasks.page.html',
   styleUrls: ['./tasks.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonCheckbox, IonItem, IonLabel, IonInput , IonButton, CommonModule, FormsModule]
 })
 export class TasksPage implements OnInit {
 
