@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Tareas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToCategories()" *ngIf="useCategories">
+        Categorías
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -9,7 +14,8 @@
   <ion-item lines="none" class="task-input">
     <ion-input
       [(ngModel)]="newTaskTitle"
-      placeholder="Nueva tarea">
+      placeholder="Escribe una tarea..."
+      clearInput="true">
     </ion-input>
 
     <ion-select
@@ -23,7 +29,7 @@
       </ion-select-option>
     </ion-select>
 
-    <ion-button (click)="addTask()" size="small">
+    <ion-button (click)="addTask()" [disabled]="!newTaskTitle">
       Agregar
     </ion-button>
   </ion-item>
@@ -45,6 +51,10 @@
 
     </ion-select>
   </ion-item>
+
+  <p *ngIf="(vm$ | async)?.length === 0" class="empty">
+    No tienes tareas aún 🚀
+  </p>
 
   <ion-list>
     <ion-item
@@ -70,7 +80,7 @@
       <ion-button
         color="danger"
         fill="clear"
-        (click)="delete(task.id)">
+        (click)="deleteTask(task.id)">
         Eliminar
       </ion-button>
 

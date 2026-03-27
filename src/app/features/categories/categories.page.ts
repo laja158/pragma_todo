@@ -16,6 +16,7 @@ import {
 } from '@ionic/angular/standalone';
 
 import { CategoryService } from 'src/app/core/services/category.service';
+import { Category } from 'src/app/core/models/category.model';
 
 @Component({
   selector: 'app-categories',
@@ -39,6 +40,8 @@ export class CategoriesPage {
 
   categories$ = this.categoryService.getCategories();
   newCategoryName = '';
+  editingId: string | null = null;
+  editingName = '';
 
   constructor(private categoryService: CategoryService) {}
 
@@ -55,5 +58,18 @@ export class CategoriesPage {
 
   delete(id: string) {
     this.categoryService.deleteCategory(id);
+  }
+
+
+  startEdit(category: Category) {
+    this.editingId = category.id;
+    this.editingName = category.name;
+  }
+
+  saveEdit(id: string) {
+    this.categoryService.update(id, {
+      name: this.editingName
+    });
+    this.editingId = null;
   }
 }
