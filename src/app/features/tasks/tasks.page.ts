@@ -23,7 +23,7 @@ export class TasksPage implements OnInit {
   categories$ = this.categoryService.getCategories();
   newTaskTitle = '';
   selectedCategory: String | null = null; 
-  useCategories = true;
+  useCategories = false;
 
   selectedCategoryFilter$ = new BehaviorSubject<string | null>(null);
 

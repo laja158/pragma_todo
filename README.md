@@ -73,6 +73,28 @@ Durante el desarrollo se priorizó:
 - Escalabilidad del código
 - Buenas prácticas de versionamiento
 
+## 🛠️ Cambios realizados
+
+Durante el desarrollo de la prueba se implementaron las siguientes funcionalidades y mejoras:
+
+📌 Funcionalidades principales
+- CRUD completo de tareas (crear, listar, completar y eliminar)
+- Gestión de categorías
+- Asociación de tareas a categorías
+- Filtrado de tareas por categoría
+- Persistencia de datos en localStorage
+
+## 🚀 Mejoras de experiencia de usuario
+- Validación de inputs
+- Feedback visual para tareas completadas
+- Estado vacío cuando no hay tareas
+- Navegación entre módulos (tareas y categorías)
+
+## 🔄 Integración multiplataforma
+- Configuración de plataforma Android con generación de APK
+- Configuración de pipeline CI/CD para iOS usando Codemagic
+- Generación de artefactos de build iOS como evidencia de compilación
+
 ## 🔀 Estrategia de ramas
 
 Se utilizó una estrategia basada en feature branches:
