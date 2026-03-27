@@ -19,27 +19,31 @@ workflows:
         script: |
           npm install @capacitor/ios
 
+      - name: Clean iOS folder (IMPORTANT)
+        script: |
+          rm -rf ios
+
       - name: Add iOS platform
         script: |
           npx cap add ios
 
-      - name: Sync Capacitor
+      - name: Copy web assets
         script: |
-          npx cap sync ios
+          npx cap copy ios
 
-      - name: Install CocoaPods (correct path)
+      - name: Sync Capacitor (force)
         script: |
-          cd ios/App
-          pod install
+          npx cap sync ios --force
 
-      - name: Verify workspace (debug)
+      - name: Debug iOS structure
         script: |
+          ls ios
           ls ios/App
 
-      - name: Build iOS app
+      - name: Build using xcodeproj (NO workspace)
         script: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \
+          xcodebuild -project App.xcodeproj \
                      -scheme App \
                      -sdk iphonesimulator \
                      -configuration Debug \
