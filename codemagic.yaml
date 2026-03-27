@@ -29,12 +29,12 @@ workflows:
 
       - name: Install CocoaPods
         script: |
-          cd ios
+          cd ios/App
           pod install
 
       - name: Build iOS app
         script: |
-          cd ios
+          cd ios/App
           xcodebuild -workspace App.xcworkspace \
                      -scheme App \
                      -sdk iphonesimulator \
