@@ -1,6 +1,6 @@
 workflows:
   ionic-ios-build:
-    name: Ionic iOS Build
+    name: iOS CI/CD Pipeline
     max_build_duration: 60
 
     environment:
@@ -27,5 +27,14 @@ workflows:
         script: |
           npx cap sync ios
 
+      - name: Build iOS app (Simulator)
+        script: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -sdk iphonesimulator \
+                     -configuration Debug \
+                     -derivedDataPath build
+
     artifacts:
-      - ios/**
+      - ios/App/build/**
