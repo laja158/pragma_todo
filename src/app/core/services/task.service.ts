@@ -26,9 +26,6 @@ export class TaskService {
   }
 
   getTasks() {
-    if (this.flags.useFirebase) {
-      return from(this.firestore.getTasks());
-    }
     return this.tasks$.asObservable();
   }
 

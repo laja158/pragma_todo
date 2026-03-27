@@ -55,22 +55,22 @@ export class TasksPage implements OnInit {
     this.selectedCategoryFilter$.next(categoryId || null);
   }
 
-  vm$ = combineLatest([
-    this.tasks$,
-    this.categories$,
-    this.selectedCategoryFilter$
-  ]).pipe(
-    map(([tasks, categories, selectedCategory]) => {
-      const filteredTasks = selectedCategory
-        ? tasks.filter(t => t.categoryId === selectedCategory)
-        : tasks;
+  vm$ = combineLatest({
+      tasks: this.tasks$,
+      categories: this.categories$,
+      selectedCategory: this.selectedCategoryFilter$
+    }).pipe(
+      map(({ tasks, categories, selectedCategory }) => {
+        const filteredTasks = selectedCategory
+          ? tasks.filter(t => t.categoryId === selectedCategory)
+          : tasks;
 
-      return filteredTasks.map(task => ({
-        ...task,
-        categoryName: categories.find(c => c.id === task.categoryId)?.name || ''
-      }));
-    })
-  );
+        return filteredTasks.map(task => ({
+          ...task,
+          categoryName: categories.find(c => c.id === task.categoryId)?.name || ''
+        }));
+      })
+    );
 
   ngOnInit() {
   }
