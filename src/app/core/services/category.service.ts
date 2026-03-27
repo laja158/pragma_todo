@@ -39,4 +39,13 @@ export class CategoryService {
         this.save(updated);
     }
 
+    update(id: string, data: Partial<Category>) {
+        const categories = this.categories$.value.map(c =>
+            c.id === id ? { ...c, ...data } : c
+        );
+
+        this.categories$.next(categories);
+        localStorage.setItem('categories', JSON.stringify(categories));
+    }
+
 }

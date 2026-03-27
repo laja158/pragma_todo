@@ -2,19 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonList, IonCheckbox, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonList, IonCheckbox, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { TaskService } from 'src/app/core/services/task.service';
 import { combineLatest, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CategoryService } from 'src/app/core/services/category.service';
 import { RemoteConfigService } from 'src/app/core/services/remote-config.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.page.html',
   styleUrls: ['./tasks.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonCheckbox, IonItem, IonLabel, IonInput , IonButton, IonSelect, IonSelectOption, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonCheckbox, IonItem, IonLabel, IonButtons, IonInput , IonButton, IonSelect, IonSelectOption, CommonModule, FormsModule]
 })
 export class TasksPage implements OnInit {
 
@@ -26,7 +27,8 @@ export class TasksPage implements OnInit {
 
   selectedCategoryFilter$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private taskService: TaskService, private categoryService: CategoryService, private remoteConfigService: RemoteConfigService) {}
+  constructor(private taskService: TaskService, private categoryService: CategoryService, 
+    private remoteConfigService: RemoteConfigService, private router: Router) {}
 
   addTask() {
     if (!this.newTaskTitle.trim()) return;
@@ -45,8 +47,11 @@ export class TasksPage implements OnInit {
     this.taskService.toggleTask(id);
   }
 
-  delete(id: string) {
-    this.taskService.deleteTask(id);
+  async deleteTask(id: string) {
+    const confirm = window.confirm('¿Eliminar tarea?');
+    if (confirm) {
+      this.taskService.deleteTask(id);
+    }
   }
 
   trackById(index: number, item: any) {
@@ -55,6 +60,10 @@ export class TasksPage implements OnInit {
 
   filterByCategory(categoryId: string | null) {
     this.selectedCategoryFilter$.next(categoryId || null);
+  }
+
+  goToCategories() {
+    this.router.navigate(['/categories']);
   }
 
   vm$ = combineLatest({
