@@ -13,6 +13,7 @@
     </ion-input>
 
     <ion-select
+      *ngIf="useCategories"
       [(ngModel)]="selectedCategory"
       placeholder="Categoría">
       <ion-select-option
@@ -27,7 +28,7 @@
     </ion-button>
   </ion-item>
 
-  <ion-item lines="none" class="filter">
+  <ion-item lines="none" class="filter" *ngIf="useCategories">
     <ion-select
       placeholder="Filtrar por categoría"
       (ionChange)="filterByCategory($event.detail.value)">
@@ -61,7 +62,7 @@
           {{ task.title }}
         </h2>
 
-        <p class="category" *ngIf="task.categoryName">
+        <p class="category" *ngIf="useCategories && task.categoryName">
           {{ task.categoryName }}
         </p>
       </ion-label>

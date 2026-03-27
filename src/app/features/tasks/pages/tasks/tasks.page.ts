@@ -7,6 +7,7 @@ import { TaskService } from 'src/app/core/services/task.service';
 import { combineLatest, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CategoryService } from 'src/app/core/services/category.service';
+import { RemoteConfigService } from 'src/app/core/services/remote-config.service';
 
 @Component({
   selector: 'app-tasks',
@@ -21,10 +22,11 @@ export class TasksPage implements OnInit {
   categories$ = this.categoryService.getCategories();
   newTaskTitle = '';
   selectedCategory: String | null = null; 
+  useCategories = true;
 
   selectedCategoryFilter$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private taskService: TaskService, private categoryService: CategoryService) {}
+  constructor(private taskService: TaskService, private categoryService: CategoryService, private remoteConfigService: RemoteConfigService) {}
 
   addTask() {
     if (!this.newTaskTitle.trim()) return;
@@ -72,7 +74,9 @@ export class TasksPage implements OnInit {
       })
     );
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.remoteConfigService.init();
+    this.useCategories = this.remoteConfigService.getFeatureFlag();
   }
 
 }
