@@ -6,36 +6,33 @@
 
 <ion-content>
 
-  <ion-item>
-  <ion-input
-    [(ngModel)]="newTaskTitle"
-    placeholder="Nueva tarea">
-  </ion-input>
+  <ion-item lines="none" class="task-input">
+    <ion-input
+      [(ngModel)]="newTaskTitle"
+      placeholder="Nueva tarea">
+    </ion-input>
 
-  <ion-select
-    [(ngModel)]="selectedCategory"
-    placeholder="Categoría">
+    <ion-select
+      *ngIf="useCategories"
+      [(ngModel)]="selectedCategory"
+      placeholder="Categoría">
+      <ion-select-option
+        *ngFor="let cat of categories$ | async"
+        [value]="cat.id">
+        {{ cat.name }}
+      </ion-select-option>
+    </ion-select>
 
-    <ion-select-option
-      *ngFor="let cat of categories$ | async"
-      [value]="cat.id">
+    <ion-button (click)="addTask()" size="small">
+      Agregar
+    </ion-button>
+  </ion-item>
 
-      {{ cat.name }}
-
-    </ion-select-option>
-
-  </ion-select>
-
-  <ion-button (click)="addTask()">
-    Agregar
-  </ion-button>
-</ion-item>
-
-  <ion-item>
+  <ion-item lines="none" class="filter" *ngIf="useCategories">
     <ion-select
       placeholder="Filtrar por categoría"
       (ionChange)="filterByCategory($event.detail.value)">
-
+      
       <ion-select-option value="">
         Todas
       </ion-select-option>
@@ -43,28 +40,40 @@
       <ion-select-option
         *ngFor="let cat of categories$ | async"
         [value]="cat.id">
-
         {{ cat.name }}
-
       </ion-select-option>
 
     </ion-select>
   </ion-item>
 
   <ion-list>
-    <ion-item *ngFor="let task of vm$ | async; trackBy: trackById">
-      <ion-checkbox slot="start" (ionChange)="toggle(task.id)" [checked]="task.completed"></ion-checkbox>
+    <ion-item
+      *ngFor="let task of vm$ | async; trackBy: trackById"
+      class="task-item">
 
-      <ion-label [class.completed]="task.completed">
-        {{ task.title }}
-        <p *ngIf="task.categoryName">
+      <ion-checkbox
+        slot="start"
+        [checked]="task.completed"
+        (ionChange)="toggle(task.id)">
+      </ion-checkbox>
+
+      <ion-label>
+        <h2 [class.completed]="task.completed">
+          {{ task.title }}
+        </h2>
+
+        <p class="category" *ngIf="useCategories && task.categoryName">
           {{ task.categoryName }}
         </p>
       </ion-label>
 
-      <ion-button color="danger" fill="clear" (click)="delete(task.id)">
+      <ion-button
+        color="danger"
+        fill="clear"
+        (click)="delete(task.id)">
         Eliminar
       </ion-button>
+
     </ion-item>
   </ion-list>
 

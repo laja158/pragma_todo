@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Task } from '../models/task.model';
+import { FeatureFlagsService } from './feature-flags.service';
+import { FirestoreService } from './firestore.service';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
@@ -8,7 +10,7 @@ export class TaskService {
   private tasks$ = new BehaviorSubject<Task[]>([]);
   private STORAGE_KEY = 'tasks';
 
-  constructor() {
+  constructor(private firestore: FirestoreService, private flags: FeatureFlagsService) {
     try {
       const savedTasks = localStorage.getItem(this.STORAGE_KEY);
       if (savedTasks) {
@@ -28,9 +30,13 @@ export class TaskService {
   }
 
   addTask(task: Task) {
-    const updated = [...this.tasks$.value, task];
-    this.tasks$.next(updated);
-    this.save(updated);
+    if (this.flags.useFirebase) {
+      this.firestore.addTask(task);
+    } else {
+      const updated = [...this.tasks$.value, task];
+      this.tasks$.next(updated);
+      this.save(updated);
+    }
   }
 
   toggleTask(id: string) {
@@ -46,4 +52,8 @@ export class TaskService {
     this.tasks$.next(updated);
     this.save(updated);
   }
+}
+
+function from(arg0: Promise<{ id: string; }[]>) {
+  throw new Error('Function not implemented.');
 }

@@ -7,6 +7,7 @@ import { TaskService } from 'src/app/core/services/task.service';
 import { combineLatest, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CategoryService } from 'src/app/core/services/category.service';
+import { RemoteConfigService } from 'src/app/core/services/remote-config.service';
 
 @Component({
   selector: 'app-tasks',
@@ -21,10 +22,11 @@ export class TasksPage implements OnInit {
   categories$ = this.categoryService.getCategories();
   newTaskTitle = '';
   selectedCategory: String | null = null; 
+  useCategories = true;
 
   selectedCategoryFilter$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private taskService: TaskService, private categoryService: CategoryService) {}
+  constructor(private taskService: TaskService, private categoryService: CategoryService, private remoteConfigService: RemoteConfigService) {}
 
   addTask() {
     if (!this.newTaskTitle.trim()) return;
@@ -55,24 +57,26 @@ export class TasksPage implements OnInit {
     this.selectedCategoryFilter$.next(categoryId || null);
   }
 
-  vm$ = combineLatest([
-    this.tasks$,
-    this.categories$,
-    this.selectedCategoryFilter$
-  ]).pipe(
-    map(([tasks, categories, selectedCategory]) => {
-      const filteredTasks = selectedCategory
-        ? tasks.filter(t => t.categoryId === selectedCategory)
-        : tasks;
+  vm$ = combineLatest({
+      tasks: this.tasks$,
+      categories: this.categories$,
+      selectedCategory: this.selectedCategoryFilter$
+    }).pipe(
+      map(({ tasks, categories, selectedCategory }) => {
+        const filteredTasks = selectedCategory
+          ? tasks.filter(t => t.categoryId === selectedCategory)
+          : tasks;
 
-      return filteredTasks.map(task => ({
-        ...task,
-        categoryName: categories.find(c => c.id === task.categoryId)?.name || ''
-      }));
-    })
-  );
+        return filteredTasks.map(task => ({
+          ...task,
+          categoryName: categories.find(c => c.id === task.categoryId)?.name || ''
+        }));
+      })
+    );
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.remoteConfigService.init();
+    this.useCategories = this.remoteConfigService.getFeatureFlag();
   }
 
 }
